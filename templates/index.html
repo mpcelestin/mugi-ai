@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>👤 Mugi AI - BIC Assistant</title>
+  <style>
+    :root {
+      --primary-color: #0056b3;
+      --secondary-color: #003366;
+      --accent-color: #ff6600;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    .logo span {
+      margin-right: 10px;
+      font-size: 2rem;
+    }
+
+    nav a, .new-chat-btn {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .new-chat-btn {
+      background-color: var(--accent-color);
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 160px);
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      max-width: 1000px;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 18px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .user-message {
+      background-color: var(--primary-color);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+    }
+
+    .bot-message {
+      background-color: #e9ecef;
+      color: var(--dark-color);
+      margin-right: auto;
+      border-bottom-left-radius: 5px;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      background-color: white;
+      border-top: 1px solid #eee;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      font-size: 16px;
+    }
+
+    #send-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 0 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .typing-indicator {
+      display: flex;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      background-color: #e9ecef;
+      border-radius: 18px;
+      border-bottom-left-radius: 5px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #6c757d;
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .quick-reply {
+      background-color: #e9ecef;
+      border: none;
+      border-radius: 15px;
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <span>👨‍💻</span> Mugi AI Assistant
+      </div>
+      <nav>
+        <button class="new-chat-btn" onclick="startNewChat()">🆕 New Chat</button>
+        <a href="/history">📜 History</a>
+        <a href="https://www.bic.bi" target="_blank">🌐 BIC Website</a>
+        <a href="tel:+25762555777">📞 Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+      <div class="message bot-message">
+        Hello! I'm Mugi AI, your BIC insurance assistant. How can I help you today?
+        <div class="quick-replies">
+          
+          <button class="quick-reply" onclick="sendQuickReply('Documents for auto insurance')">🚗 Auto insurance</button>
+          <button class="quick-reply" onclick="sendQuickReply('Tell me all bic branches')">📍 BIC Branches</button>
+          <button class="quick-reply" onclick="sendQuickReply('Bic products')">🛡️ BIC Products</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Ask me about insurance..."/>
+      <button id="send-button" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 | Mugi AI Assistant v1.0 | Programmed by M.P. Célestin</p>
+  </footer>
+
+  <script>
+    function startNewChat() {
+      if (confirm('Start a new chat?')) {
+        fetch('/new-chat', { method: 'POST' })
+          .then(() => window.location.href = '/')
+          .catch(err => {
+            console.error('Error:', err);
+            window.location.href = '/';
+          });
+      }
+    }
+
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+
+    userInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function sendMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+
+      addMessage(message, 'user');
+      userInput.value = '';
+      showTypingIndicator();
+
+      fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      })
+      .then(response => response.json())
+      .then(data => {
+        removeTypingIndicator();
+        addMessage(data.reply, 'bot');
+      })
+      .catch(error => {
+        removeTypingIndicator();
+        addMessage("Sorry, I'm having trouble. Please try again.", 'bot');
+        console.error('Error:', error);
+      });
+    }
+
+    function sendQuickReply(text) {
+      userInput.value = text;
+      sendMessage();
+    }
+
+    function addMessage(text, sender) {
+      const div = document.createElement('div');
+      div.className = `message ${sender}-message`;
+      div.innerHTML = text.replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+      chatMessages.appendChild(div);
+      scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+      const div = document.createElement('div');
+      div.className = 'typing-indicator';
+      div.id = 'typing-indicator';
+      div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+      chatMessages.appendChild(div);
+      scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    scrollToBottom();
+  </script>
+</body>
+</html>

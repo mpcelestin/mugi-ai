@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chat History - Mugi AI</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    margin: 0; padding: 0;
+    color: #333;
+  }
+  .container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    padding: 20px;
+  }
+  h1 {
+    margin-bottom: 15px;
+    color: #0056b3;
+  }
+  .session-group {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+  .session-header {
+    font-weight: 600;
+    color: #003366;
+    margin-bottom: 12px;
+  }
+  .chat-entry {
+    margin-bottom: 12px;
+  }
+  .user-msg {
+    background: #e9ecef;
+    padding: 8px 15px;
+    border-radius: 10px 10px 10px 0;
+    max-width: 70%;
+    color: #111;
+  }
+  .bot-msg {
+    background: #d1e7ff;
+    padding: 8px 15px;
+    border-radius: 10px 10px 0 10px;
+    max-width: 70%;
+    margin-left: auto;
+    color: #003366;
+  }
+  .timestamp {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 3px;
+  }
+  button {
+    background: #ff6600;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  button:hover {
+    opacity: 0.85;
+  }
+  .btn-container {
+    margin-bottom: 20px;
+  }
+  footer {
+    text-align: center;
+    margin: 30px 0 10px;
+    color: #666;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Chat History</h1>
+    <div class="btn-container">
+      <button onclick="refreshHistory()">Refresh</button>
+      <button onclick="clearHistory()">Clear History</button>
+      <a href="/" style="color:#0056b3; font-weight:600; text-decoration:none; margin-left:15px;">Back to Chat</a>
+    </div>
+
+    {% if grouped_history %}
+      {% for session_id, chats in grouped_history.items() %}
+        <div class="session-group">
+          <div class="session-header">Session: {{ session_id }}</div>
+          {% for chat in chats %}
+            <div class="chat-entry">
+              <div class="user-msg">{{ chat.user_message }}</div>
+              <div class="bot-msg">{{ chat.bot_reply | safe }}</div>
+              <div class="timestamp">{{ chat.timestamp }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No chat history yet.</p>
+    {% endif %}
+  </div>
+
+  <footer>&copy; {{ now.year }} Mugi AI - All rights reserved.</footer>
+
+  <script>
+    function refreshHistory() {
+      location.reload();
+    }
+
+    function clearHistory() {
+      if(confirm('Are you sure you want to clear the current session chat history? This cannot be undone.')) {
+        fetch('/clear-history', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'}
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          if(data.status === 'success') {
+            refreshHistory();
+          }
+        })
+        .catch(() => alert('Failed to clear history. Please try again.'));
+      }
+    }
+  </script>
+</body>
+</html>

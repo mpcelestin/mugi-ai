@@ -1,0 +1,19 @@
+{
+  "company": {
+    "name": "Business Insurance and Reinsurance Company (BIC)",
+    "location": "Avenue de l’ONU No.6, Bujumbura, Burundi",
+    "founded": 2017,
+    "email": "info@bic.bi",
+    "phone": "+257 22 28 0042"
+  },
+  "products": {
+    "auto": "Covers motor vehicles against damage, theft, and liability.",
+    "life": "Life and pension policies to help you save and protect your future.",
+    "accident": "Covers bodily injury from unforeseen accidents.",
+    "fire": "Covers property and contents from fire damage.",
+    "reinsurance": "Reinsurance services via African Re, ZEP Re, and others."
+  },
+  "values": [
+    "Integrity", "Availability", "Client Service", "Trust", "Teamwork", "Professionalism"
+  ]
+}
